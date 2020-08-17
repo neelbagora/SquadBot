@@ -50,7 +50,9 @@ async def on_message(msg):
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    print(member)
+    if (before != None and after.name == 'Guap Generator'):
+        #TODO: get current time of event
+        print(member)
 
 @bot.command()
 @commands.has_permissions(manage_guild=True)
