@@ -4,6 +4,7 @@ import random
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
+import json
 
 # Create .env file path
 dotenv_path = join(dirname(__file__), '.env') 
@@ -45,6 +46,35 @@ async def on_message(msg):
         
         if msg.content.lower() == 'f':
             await msg.channel.send("f")
+
+        if msg.content.lower() == 'gimme cash':
+            with open("guap.json", "r") as f:
+                data = json.load(f)
+                if str(msg.author.id) in data.keys():
+                    guap = data[str(msg.author.id)]['guap']
+                    guap += 10
+                print(data)
+            with open("guap.json", "w") as f:
+                if guap == 0:
+                    data.update({
+                        str(msg.author.id):{
+                            'guap': 10}
+                    })
+                else:
+                    data.update({
+                        str(msg.author.id):{
+                            'guap': guap}
+                    })
+                json.dump(data, f)
+            guap = 0
+            await msg.channel.send("here is ten guap")
+        
+        if msg.content.lower() == 'guap':
+            with open("guap.json", "r") as f:
+                data = json.load(f)
+                if str(msg.author.id) in data.keys():
+                    guap = data[str(msg.author.id)]['guap']
+                    await msg.channel.send("You got {} guap!".format(guap))
 
     await bot.process_commands(msg)
 
