@@ -48,7 +48,7 @@ async def on_message(msg):
             await msg.channel.send("f")
 
         if msg.content.lower() == 'gimme cash':
-            with open("guap.json", "+") as f:
+            with open("guap.json", "r+") as f:
                 data = json.load(f)
                 if str(msg.author.id) in data.keys():
                     guap = data[str(msg.author.id)]['guap']
@@ -68,7 +68,7 @@ async def on_message(msg):
                     })
                 json.dump(data, f)
             guap = 0
-            await msg.channel.send("Here is ten guap $$$.")
+            await msg.channel.send("Here is ten guap $10.")
         
         if msg.content.lower() == 'guap':
             with open("guap.json", "r") as f:
