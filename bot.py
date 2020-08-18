@@ -37,6 +37,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(msg):
+    guap = 0
     if not is_me(msg):    
         if (msg.content.lower() == 'bet'):
             await msg.channel.send('bet')
@@ -66,7 +67,6 @@ async def on_message(msg):
                             'guap': guap}
                     })
                 json.dump(data, f)
-            guap = 0
             await msg.channel.send("Here is ten guap $10.")
         
         if msg.content.lower() == 'guap':
@@ -74,7 +74,7 @@ async def on_message(msg):
                 data = json.load(f)
                 if str(msg.author.id) in data.keys():
                     guap = data[str(msg.author.id)]['guap']
-                    await msg.channel.send("You got {} guap!".format(guap))
+                    await msg.channel.send("{}, You got {} guap!".format(msg.author.name, guap))
 
     await bot.process_commands(msg)
 
