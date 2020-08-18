@@ -74,7 +74,7 @@ async def on_message(msg):
                 data = json.load(f)
                 if str(msg.author.id) in data.keys():
                     guap = data[str(msg.author.id)]['guap']
-                    await msg.channel.send("{}, You got {} guap!".format(msg.author.name, guap))
+                    await msg.channel.send("{}, you got {} guap!".format(msg.author.name, guap))
 
     await bot.process_commands(msg)
 
