@@ -82,18 +82,38 @@ async def on_message(msg):
 @bot.event
 async def on_voice_state_update(member, before, after):
     if member != bot.user:
-        if (before != None and before.name == 'Guap Generator'):
+        print(member)
+        print(before)
+        print(after)
+
+        if (after.channel != None and after.channel.name == 'Guap Generator'):
             with open("guap.json", "r") as f:
                 data = json.load(f)
-        elif (after != None and after.name == 'Guap Generator'):
-            with open("guap.json", "r") as f:
-                data = json.load(f)
+                print(data)
             with open("guap.json", "w") as f:
                 data.update({
                     str(member.id): {
-                        'joined': str(datetime.now())
+                        'joined': datetime.now()
                     }
                 })
+                print(data)
+                json.dump(data, f)
+        elif (before.channel != None and before.channel.name == 'Guap Generator'):
+            with open("guap.json", "r") as f:
+                data = json.load(f)
+            with open("guap.json", "w") as f:
+                orig_guap = 0
+                if (str(member.id) in data.keys()):
+                    joined_time = data[str(member.id)]['joined']
+                    orig_guap = data[str(member.id)]['guap']
+                diff = int(joined_time - datetime.now().total_seconds()) / 10
+                orig_guap += diff * 2
+                data.update({
+                    str(member.id): {
+                        'guap': orig_guap
+                    }
+                })
+                print(data)
                 json.dump(data, f)
 
 @bot.command()
