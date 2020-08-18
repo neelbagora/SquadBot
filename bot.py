@@ -4,7 +4,7 @@ import random
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
-import datetime
+from datetime import datetime
 import json
 
 # Create .env file path
@@ -91,7 +91,7 @@ async def on_voice_state_update(member, before, after):
             with open("guap.json", "w") as f:
                 data.update({
                     str(member.id): {
-                        'joined': datetime.now()
+                        'joined': str(datetime.now())
                     }
                 })
                 json.dump(data, f)
