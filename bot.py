@@ -48,13 +48,14 @@ async def on_message(msg):
             await msg.channel.send("f")
 
         if msg.content.lower() == 'gimme cash':
-            with open("guap.json", "r") as f:
+            with open("guap.json", "+") as f:
                 data = json.load(f)
                 if str(msg.author.id) in data.keys():
                     guap = data[str(msg.author.id)]['guap']
                     guap += 10
+                
                 print(data)
-            with open("guap.json", "w") as f:
+
                 if guap == 0:
                     data.update({
                         str(msg.author.id):{
@@ -67,7 +68,7 @@ async def on_message(msg):
                     })
                 json.dump(data, f)
             guap = 0
-            await msg.channel.send("here is ten guap")
+            await msg.channel.send("Here is ten guap $$$.")
         
         if msg.content.lower() == 'guap':
             with open("guap.json", "r") as f:
@@ -80,9 +81,10 @@ async def on_message(msg):
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    if (before != None and after.name == 'Guap Generator'):
-        #TODO: get current time of event
-        print(member)
+    if member != bot.user:
+        if (before != None and before.name == 'Guap Generator'):
+            #TODO: get current time of event
+            print(member)
 
 @bot.command()
 @commands.has_permissions(manage_guild=True)
