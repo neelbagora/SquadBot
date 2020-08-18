@@ -5,6 +5,7 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 from datetime import datetime
+import time
 import json
 
 # Create .env file path
@@ -89,30 +90,45 @@ async def on_voice_state_update(member, before, after):
         if (after.channel != None and after.channel.name == 'Guap Generator'):
             with open("guap.json", "r") as f:
                 data = json.load(f)
+                print()
                 print(data)
             with open("guap.json", "w") as f:
-                data.update({
-                    str(member.id): {
-                        'joined': datetime.now()
-                    }
-                })
+                if (str(member.id) in data.keys() and 'joined' in data[str(member.id)].keys()):
+                    data[str(member.id)]['joined'] = time.time()
+                else:
+                    data.update({
+                        str(member.id): {
+                            'joined': time.time(),
+                            'guap': 0
+                        }
+                    })
+                print()
                 print(data)
                 json.dump(data, f)
         elif (before.channel != None and before.channel.name == 'Guap Generator'):
             with open("guap.json", "r") as f:
                 data = json.load(f)
-            with open("guap.json", "w") as f:
-                orig_guap = 0
+                print()
+                print(data)
+                guap = 0
+                joined_time = 0
+
                 if (str(member.id) in data.keys()):
                     joined_time = data[str(member.id)]['joined']
-                    orig_guap = data[str(member.id)]['guap']
-                diff = int(joined_time - datetime.now().total_seconds()) / 10
-                orig_guap += diff * 2
-                data.update({
-                    str(member.id): {
-                        'guap': orig_guap
-                    }
-                })
+                    guap = data[str(member.id)]['guap']
+                diff = int(time.time() - joined_time) / 10
+
+            with open("guap.json", "w") as f:                   
+                guap += diff * 2
+                if (str(member.id) in data.keys()):
+                    data[str(member.id)]['guap'] = guap
+                else:
+                    data.update({
+                        str(member.id): {
+                            'joined': joined_time,
+                            'guap': guap
+                        }
+                    })
                 print(data)
                 json.dump(data, f)
 
