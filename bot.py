@@ -48,14 +48,13 @@ async def on_message(msg):
             await msg.channel.send("f")
 
         if msg.content.lower() == 'gimme cash':
-            with open("guap.json", "r+") as f:
+            with open("guap.json", "r") as f:
                 data = json.load(f)
                 if str(msg.author.id) in data.keys():
                     guap = data[str(msg.author.id)]['guap']
                     guap += 10
-                
                 print(data)
-
+            with open("guap.json", "w") as f:
                 if guap == 0:
                     data.update({
                         str(msg.author.id):{
