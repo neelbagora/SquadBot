@@ -82,8 +82,18 @@ async def on_message(msg):
 async def on_voice_state_update(member, before, after):
     if member != bot.user:
         if (before != None and before.name == 'Guap Generator'):
-            #TODO: get current time of event
-            print(member)
+            with open("guap.json", "r") as f:
+                data = json.load(f)
+        elif (after != None and after.name == 'Guap Generator'):
+            with open("guap.json", "r") as f:
+                data = json.load(f)
+            with open("guap.json", "w") as f:
+                data.update({
+                    str(member.id): {
+                        'joined': datetime.now()
+                    }
+                })
+                json.dump(data, f)
 
 @bot.command()
 @commands.has_permissions(manage_guild=True)
