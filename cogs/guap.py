@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import json
+import time
 
 # New - The Cog class must extend the commands.Cog class
 class Guap(commands.Cog):
@@ -42,6 +43,59 @@ class Guap(commands.Cog):
                         await msg.channel.send("{}, you got {} guap!".format(msg.author.name, guap))
 
         await self.bot.process_commands(msg)
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        if member != self.bot.user:
+            print(member)
+            print(before)
+            print(after)
+
+            if (after.channel != None and after.channel.name == 'Guap Generator'):
+                with open("guap.json", "r") as f:
+                    data = json.load(f)
+                    print()
+                    print(data)
+                with open("guap.json", "w") as f:
+                    if (str(member.id) in data.keys() and 'joined' in data[str(member.id)].keys()):
+                        data[str(member.id)]['joined'] = time.time()
+                    else:
+                        data.update({
+                            str(member.id): {
+                                'joined': time.time(),
+                                'guap': 0
+                            }
+                        })
+                    print()
+                    print(data)
+                    json.dump(data, f)
+            elif (before.channel != None and before.channel.name == 'Guap Generator'):
+                with open("guap.json", "r") as f:
+                    data = json.load(f)
+                    print()
+                    print(data)
+                    guap = 0
+                    joined_time = 0
+
+                    if (str(member.id) in data.keys()):
+                        joined_time = data[str(member.id)]['joined']
+                        guap = data[str(member.id)]['guap']
+                    diff = int(time.time() - joined_time) / 10
+
+                with open("guap.json", "w") as f:                   
+                    guap += diff * 2
+                    if (str(member.id) in data.keys()):
+                        data[str(member.id)]['guap'] = guap
+                    else:
+                        data.update({
+                            str(member.id): {
+                                'joined': joined_time,
+                                'guap': guap
+                            }
+                        })
+                    print(data)
+                    json.dump(data, f)
+
 
 
 def setup(bot):
